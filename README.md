@@ -1,4 +1,4 @@
-# powercli
+# PowerCLI Scripting Nuggets
 
 ## DRS Rules
 
