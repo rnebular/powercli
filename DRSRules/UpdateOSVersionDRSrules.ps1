@@ -4,10 +4,9 @@
 # Prerequisites to run this script
 # PowerCLI 6.x, prefer 6.5.1 or newer
 # Powershell module "DRSRule", http://www.lucd.info/2015/01/22/drsrule-drs-rules-and-groups-module/
-# DRS VM Groups need to exist already. Manually create them via the GUI for now.
 
-# Get inputs
-$clustername = Read-Host "What cluster to update?"
+# Get user input
+$clustername = Read-Host "What cluster should I update?"
 
 # Set rulename variables
 $winrulename = "$clustername"+"-"+"windows"
@@ -46,12 +45,7 @@ $winvms = Get-Cluster $clustername | Get-VM | where GuestId -like "windows*" | w
 Write-Output "Gathering list of Non-Windows VM's"
 $linuxvms = Get-Cluster $clustername | Get-VM | where GuestId -lt "windows" | where PowerState -eq PoweredOn
 
-
-# Checking for rules, if not found, will create with first VM that matches the OS filter
-#$winrulecheck = Get-DrsVMGroup -Cluster $clustername -Name $winrulename
-#$linuxrulecheck = Get-DrsVMGroup -Cluster $clustername -Name $linuxrulename
-
-
+# Creating the DRS Groups. Had logic to check first, but this will just error with "already exists" and move on.
 Write-Host "Creating DRS Group for Windows VM's"
 New-DrsVMGroup -Name $winrulename -VM $winvms[0] -Cluster $clustername
 Write-Host "Creating DRS Group for Non-Windows VM's"
